@@ -20,4 +20,4 @@ for imageRow = 1 : imageHeight
 end
 
 histogram(histogramData)
-imageHistogram = 1
+imageHistogram = 1;
