@@ -3,7 +3,7 @@ function greyscaleImage = Greyscale_Kmeans(image, numberOfCentroids)
 greyscaleImage = double(image);
 imageSize = size(image); %triple number width, height and dimensions
 
-stongestIntensity = 0
+stongestIntensity = 0;
 for iRow = 1 : imageSize(1)
     for iColumn = 1 : imageSize(2)
         sampleIntensity = greyscaleImage(iRow,iColumn);
@@ -70,6 +70,5 @@ for iRow = 1 : imageSize(1)
         newCentroids(closestCentroid);
     end
 end
-newCentroids
 
 greyscaleImage = uint8(greyscaleImage);

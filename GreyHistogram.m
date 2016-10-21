@@ -1,4 +1,4 @@
-function imageHistogram = GreyHistogram(initialImage)
+function histogramData = GreyHistogram(initialImage)
 
 [imageWidth, imageHeight, imageDims] = size(initialImage);
 greyImage = 0;
@@ -19,5 +19,5 @@ for imageRow = 1 : imageHeight
     end
 end
 
-histogram(histogramData)
-imageHistogram = 1;
+%histogram(histogramData)
+histogramData;
