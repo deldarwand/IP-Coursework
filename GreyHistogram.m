@@ -8,16 +8,13 @@ else
     greyImage = rgb2grey(initialImage);
 end
 
-histogramData = uint8(zeros(size(initialImage)));
-histogramDataCounter = 1;
+histogramData = uint32(zeros(1, 256));
 
 for imageRow = 1 : imageHeight
     for imageColumn = 1 : imageWidth
         imageSample = greyImage(imageRow,imageColumn);
-        histogramData(histogramDataCounter) = imageSample;
-        histogramDataCounter = histogramDataCounter+1 ;
+        histogramData(imageSample+1) = histogramData(imageSample+1)+1;
     end
 end
 
-%histogram(histogramData)
-histogramData;
+bar(histogramData)

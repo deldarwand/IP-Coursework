@@ -3,20 +3,22 @@ function greyscaleImage = Greyscale_Kmeans(image, numberOfCentroids)
 greyscaleImage = double(image);
 imageSize = size(image); %triple number width, height and dimensions
 
-stongestIntensity = 0;
-for iRow = 1 : imageSize(1)
-    for iColumn = 1 : imageSize(2)
-        sampleIntensity = greyscaleImage(iRow,iColumn);
-        if(sampleIntensity > stongestIntensity)
-            stongestIntensity = sampleIntensity;
-        end
+histogramData = GreyHistogram(greyscaleImage);
+
+stongestWeightedIntensity = 0;
+stongestWeightedIntensityCount = 0;
+for iRow = 1 : 256
+        weightedSampleIntensity = histogramData(iRow) * iRow;
+        if(weightedSampleIntensity > stongestWeightedIntensity * stongestWeightedIntensityCount)
+            stongestWeightedIntensity = iRow;
+            stongestWeightedIntensityCount = histogramData(iRow);
     end
 end
 
 centroids = zeros(1, numberOfCentroids, 'double');
 %centroids = rand(1,numberOfCentroids);
 for i = 1 : numberOfCentroids
-    centroids(i) = stongestIntensity/i;%centroids(i) * 255;
+    centroids(i) = stongestWeightedIntensity/i;%centroids(i) * 255;
 end
 
 centroidsTotal = zeros(1, numberOfCentroids, 'uint8');
