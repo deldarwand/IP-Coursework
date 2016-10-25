@@ -1,6 +1,5 @@
-function RegionGrowing(Seed)
+function RegionGrowingImage = RegionGrowing(Seed, Threshold)
 Image = imread('girlface.bmp');
-imshow(Image);
 [ImageWidth, ImageHeight] = size(Image);
 
 NeighbourhoodSize = 4;
@@ -11,7 +10,6 @@ BoundaryQueue(:, BoundaryQueueHead) = Seed;
 
 VisitedPixels = zeros(ImageWidth, ImageHeight, 'uint8');
 VisitedPixels(Seed) = 1;
-Threshold = 30;
 
 while(BoundaryQueueHead ~= 0)
     CurrentPosition = BoundaryQueue(:, BoundaryQueueHead);
@@ -44,6 +42,8 @@ while(BoundaryQueueHead ~= 0)
     end
 end
 imshow(VisitedPixels >= 1);
+
+RegionGrowingImage = VisitedPixels >= 1;
 end
 
 %Gets the pixels neighbourhood.
