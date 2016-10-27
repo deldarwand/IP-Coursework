@@ -55,7 +55,6 @@ imshow(GirlfaceGroundTruth);
 subplot(2,2,3);
 plot(ROCValues(1,:), ROCValues(2,:));
 
-
 subplot(2,2,4);
 Threshold(GirlfaceImage, OperatingPoint, true);
 annotation('textbox',get(gca,'Position'),'String', sprintf('DOP \nis:%i.', OperatingPoint));
