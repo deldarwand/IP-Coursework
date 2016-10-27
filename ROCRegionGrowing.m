@@ -1,4 +1,4 @@
-function CalculateROC()
+function ROCRegionGrowing()
 
 GirlfaceImage = imread('girlface.bmp');
 GirlfaceGroundTruth = imread('girlfaceGT.bmp');
@@ -9,7 +9,7 @@ ROCValues = zeros(2, 256);
 TotalPositives = 0;
 TotalNegatives = 0;
 for ThresholdValue = 0:255
-    RegionGrowingImage = RegionGrowing([256,256], ThresholdValue);
+    RegionGrowingImage = RegionGrowing([256,256], ThresholdValue, 8);
     RegionGrowingImage = NormaliseGroundTruthImage(RegionGrowingImage);
     TruePositives = 0;
     TrueNegatives = 0;
@@ -44,11 +44,22 @@ for ThresholdValue = 0:255
     
     ROCValues(1, ThresholdValue+1) = XValue;
     ROCValues(2, ThresholdValue+1) = YValue;
-
+    sprintf('Finished number %i', ThresholdValue)
 end
 'Desired operating point:'
 OperatingPoint = GetOperatingPointGradientForROC(TotalPositives, TotalNegatives, ROCValues)
+figure;
+subplot(2,2,1);
+imshow(GirlfaceImage);
+subplot(2,2,2);
+imshow(GirlfaceGroundTruth);
+subplot(2,2,3);
 plot(ROCValues(1,:), ROCValues(2,:));
+
+subplot(2,2,4);
+RegionGrowing([256,256], OperatingPoint, 8);
+annotation('textbox',get(gca,'Position'),'String', sprintf('DOP \nis:%i.', OperatingPoint));
+
 end
 
 

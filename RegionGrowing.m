@@ -1,8 +1,6 @@
-function RegionGrowingImage = RegionGrowing(Seed, Threshold)
+function RegionGrowingImage = RegionGrowing(Seed, Threshold, NeighbourhoodSize)
 Image = imread('girlface.bmp');
 [ImageWidth, ImageHeight] = size(Image);
-
-NeighbourhoodSize = 4;
 
 BoundaryQueue = zeros(2, ImageWidth*ImageHeight, 'int32');
 BoundaryQueueHead = 1;
@@ -20,7 +18,7 @@ while(BoundaryQueueHead ~= 0)
         VisitedPixels(CurrentPosition) = 2;
         PixelNeighbourhood = GetPixelNeighbourhood(CurrentPosition(1), CurrentPosition(2), NeighbourhoodSize);
         for NeighbourPixel = 1 : NeighbourhoodSize
-            NeighbourPosition = PixelNeighbourhood(:, NeighbourPixel);
+            NeighbourPosition = PixelNeighbourhood(NeighbourPixel, :);
             NeighbourXPosition = NeighbourPosition(1);
             NeighbourYPosition = NeighbourPosition(2);
             IsPixelPositionOK = true;
@@ -34,7 +32,8 @@ while(BoundaryQueueHead ~= 0)
             if(IsPixelPositionOK == true)
                 if(VisitedPixels(NeighbourXPosition, NeighbourYPosition) == 0)
                 BoundaryQueueHead = BoundaryQueueHead + 1;
-                BoundaryQueue(:, BoundaryQueueHead) = NeighbourPosition;
+                BoundaryQueue(1, BoundaryQueueHead) = NeighbourXPosition;
+                BoundaryQueue(2, BoundaryQueueHead) = NeighbourYPosition;
                 VisitedPixels(NeighbourXPosition, NeighbourYPosition) = 1;
                 end
             end
@@ -42,6 +41,8 @@ while(BoundaryQueueHead ~= 0)
     end
 end
 imshow(VisitedPixels >= 1);
+hold on;
+plot(Seed(1),Seed(2),'r.','MarkerSize',20);
 
 RegionGrowingImage = VisitedPixels >= 1;
 end
@@ -56,7 +57,7 @@ if (NeighbourhoodSize == 4)
     PixelNeighbourhood = [XPosition, YPosition - 1;...
                           XPosition + 1, YPosition;...
                           XPosition, YPosition + 1;...
-                          XPosition - 1, YPosition]';
+                          XPosition - 1, YPosition];
 elseif(NeighbourhoodSize == 8)
     PixelNeighbourhood = [XPosition, YPosition - 1;...
                           XPosition + 1, YPosition - 1;...
