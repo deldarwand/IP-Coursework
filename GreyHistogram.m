@@ -2,7 +2,7 @@ function histogramData = GreyHistogram(initialImage)
 
 [imageWidth, imageHeight, imageDims] = size(initialImage);
 greyImage = 0;
-if(imageDims == 1)
+if( imageDims == 1 )
     greyImage = initialImage;
 else
     greyImage = rgb2grey(initialImage);
@@ -17,4 +17,4 @@ for imageRow = 1 : imageHeight
     end
 end
 
-bar(histogramData)
+end

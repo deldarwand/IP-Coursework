@@ -1,8 +1,8 @@
-function CalculateROC()
+function ROCThreshold()
 
 GirlfaceImage = imread('girlface.bmp');
 GirlfaceGroundTruth = imread('girlfaceGT.bmp');
-GirlfaceGroundTruth = NormaliseGroundTruthImage(GirlfaceGroundTruth);
+GirlfaceGroundTruth = NormaliseImage(GirlfaceGroundTruth);
 [ImageWidth, ImageHeight] = size(GirlfaceImage);
 
 ROCValues = zeros(2, 256);
@@ -45,13 +45,24 @@ for ThresholdValue = 0:255
     ROCValues(2, ThresholdValue+1) = YValue;
 
 end
-'Desired operating point:'
-OperatingPoint = GetOperatingPointGradientForROC(TotalPositives, TotalNegatives, ROCValues)
+
+OperatingPoint = GetOperatingPointGradientForROC(TotalPositives, TotalNegatives, ROCValues);
+
+subplot(2,2,1);
+imshow(GirlfaceImage);
+subplot(2,2,2);
+imshow(GirlfaceGroundTruth);
+subplot(2,2,3);
 plot(ROCValues(1,:), ROCValues(2,:));
+
+
+subplot(2,2,4);
+Threshold(GirlfaceImage, OperatingPoint, true);
+annotation('textbox',get(gca,'Position'),'String', sprintf('DOP \nis:%i.', OperatingPoint));
 end
 
 
-function NormalisedImage = NormaliseGroundTruthImage(GroundTruthImage)
+function NormalisedImage = NormaliseImage(GroundTruthImage)
 [ImageWidth, ImageHeight] = size(GroundTruthImage);
 NormalisedImage = uint8(GroundTruthImage);
 for Column = 1 : ImageWidth
