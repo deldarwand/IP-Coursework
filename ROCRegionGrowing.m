@@ -44,7 +44,7 @@ for ThresholdValue = 0:255
     
     ROCValues(1, ThresholdValue+1) = XValue;
     ROCValues(2, ThresholdValue+1) = YValue;
-    sprintf('Finished number %i', ThresholdValue)
+    sprintf('Finished number %i out of %i', ThresholdValue+1, 256)
 end
 'Desired operating point:'
 OperatingPoint = GetOperatingPointGradientForROC(TotalPositives, TotalNegatives, ROCValues)

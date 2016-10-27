@@ -21,7 +21,7 @@ for Column = 0 : NumberOfPoints-1
         
         subplot(NumberOfPoints, NumberOfPoints, Column*NumberOfPoints + Row + 1);
         RegionGrowing([CurrentXPosition, CurrentYPosition], CourseworkThresholds(CourseworkThreshold), NeighbourhoodSize);
-        (sprintf('Finished number %i', Column*NumberOfPoints + Row + 1))
+        sprintf('Finished number %i out of %i', (Column*NumberOfPoints + Row + 1) + (NumberOfPoints^2 * (CourseworkThreshold-1)), 2*NumberOfPoints^2)
     end
 end
 end
