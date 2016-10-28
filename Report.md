@@ -67,3 +67,10 @@ The following ROC curve was obtained by running the thresholds from 0 to 255 (in
 Along with the ROC curve you can see the region obtained from the suggested desired operating point calculated from the ROC curve. This one is quite different from the previous techniques as this one excludes a large amount of the background while getting most of the skin. However, it still missed quite a bit of it.
 
 ### Task 2 - Mean Shift
+The mean shift task can be easily run through the **'CourseworkMeanShift.m'** file, in this algorithm, good results were quite hard to achieve using the **'girlface.bmp'** image, therefore, to show it's capabilities, the **'cameraman.tif'** is also passed through the mean shift algorithm as it works better and the results from both images are shown. The mean shift algorithm implemented uses the intensity of the greyscale as the feature space of the image to do all of the shift calculations where the original window size is given to it along with the image and then those windows move to the mean average of the pixels which fit the criteria of the window. The window sizes tested with both images are `[20, 40, 60, 80, 100]` and the results are as follows:
+
+| Cameraman  |  Girlface |
+|:-:|:-:|
+| ![Cameraman Mean Shift](Images/CameramanMeanShift.png) | ![Girlface Mean Shift](Images/GirlfaceMeanShift.png) |
+
+As can be seen from the images, the mean shift can become very segmented with lower window sizes on both images, however, as the window size increases, it also becomes much more unified, giving a good segmentation which very much depends on the colour space of the image.
