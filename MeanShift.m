@@ -10,28 +10,23 @@ end
 [ImageWidth, ImageHeight] = size(InitialImage);
 WindowCentres = zeros(NumberOfWindows, 1);
 
-%Sets initial middle ground for all of the windows.
+%Sets initial centre for all of the windows.
 for Window = 1 : NumberOfWindows
     LowerThreshold = (Window - 1) * WindowSize;
     UpperThreshold = Window * WindowSize;
     if(Window == NumberOfWindows)
         UpperThreshold = 256;
     end
-    MiddleGround = double(LowerThreshold + UpperThreshold) / 2.0;
-    WindowCentres(Window) = MiddleGround;
+    WindowCentre = double(LowerThreshold + UpperThreshold) / 2.0;
+    WindowCentres(Window) = WindowCentre;
 end
 
 for Repeat = 1 : NumberOfRepeats
     for Window = 1 : NumberOfWindows
-        WindowMiddleGround = WindowCentres(Window);
-        LowerThreshold = WindowMiddleGround - (double(WindowSize) / 2.0);
-        UpperThreshold = WindowMiddleGround + (double(WindowSize) / 2.0);
-        if(UpperThreshold > 256)
-            UpperThreshold = 256;
-        end
-        if(LowerThreshold < 0)
-            LowerThreshold = 0;
-        end
+        WindowCentre = WindowCentres(Window);
+        LowerThreshold = GetLowerThreshold(WindowCentre, WindowSize);
+        UpperThreshold = GetUpperThreshold(WindowCentre, WindowSize);
+       
         PixelsInWindowCount = 0;
         PixelsValueTotal = double(0.0);
         for Column = 1 : ImageWidth
@@ -45,11 +40,11 @@ for Repeat = 1 : NumberOfRepeats
             end
         end
 
-        NewMiddleGround = double(PixelsValueTotal) / double(PixelsInWindowCount);
+        NewWindowCentre = double(PixelsValueTotal) / double(PixelsInWindowCount);
         if(PixelsInWindowCount == 0)
-            NewMiddleGround = double(LowerThreshold + UpperThreshold) / 2.0;
+            NewWindowCentre = double(LowerThreshold + UpperThreshold) / 2.0;
         end
-        WindowCentres(Window) = NewMiddleGround;
+        WindowCentres(Window) = NewWindowCentre;
     end
 end
 
@@ -60,22 +55,15 @@ for Label = 0 : NumberOfWindows - 1
     WindowLabels(Label+1) = Label+1;
 end
 
-
 OutputImage = zeros(ImageWidth, ImageHeight, 'uint8');
 
 for Window = 1 : NumberOfWindows
     sprintf('Ran number %i out of %i', Window, NumberOfWindows)
-    WindowMiddleGround = WindowCentres(Window);
-    LabelToUse = GetLabelToUse(WindowLabels(Window), InitialImage, OutputImage, WindowMiddleGround, WindowSize);
-    WindowMiddleGround = WindowCentres(Window);
-    LowerThreshold = WindowMiddleGround - (double(WindowSize) / 2.0);
-    UpperThreshold = WindowMiddleGround + (double(WindowSize) / 2.0);
-    if(UpperThreshold > 256)
-        UpperThreshold = 256;
-    end
-    if(LowerThreshold < 0)
-        LowerThreshold = 0;
-    end
+    WindowCentre = WindowCentres(Window);
+    LabelToUse = GetLabelToUse(WindowLabels(Window), InitialImage, OutputImage, WindowCentre, WindowSize);
+    WindowCentre = WindowCentres(Window);
+    LowerThreshold = GetLowerThreshold(WindowCentre, WindowSize);
+    UpperThreshold = GetUpperThreshold(WindowCentre, WindowSize);
     
     for Column = 1 : ImageWidth
         for Row = 1 : ImageHeight
@@ -87,6 +75,7 @@ for Window = 1 : NumberOfWindows
     end
 end
 OutputImage = ConvertLabelsToIntensities(ImageWidth, ImageHeight, OutputImage,WindowLabelsIntensities);
+imshow(OutputImage);
 end
 
 function OutputImage = ConvertLabelsToIntensities(ImageWidth, ImageHeight, LabelledImage, LabelIntensity)
@@ -97,21 +86,14 @@ for Column = 1 : ImageWidth
         end
     end
 end
-imshow(LabelledImage)
 OutputImage = LabelledImage;
 end
 
 function LabelToUse = GetLabelToUse(CurrentWindowLabel, OriginalImage, CurrentImage, WindowCentre, WindowSize)
 [ImageWidth, ImageHeight] = size(CurrentImage);
 LabelToUse = CurrentWindowLabel;
-LowerThreshold = WindowCentre - (double(WindowSize) / 2.0);
-UpperThreshold = WindowCentre + (double(WindowSize) / 2.0);
-if(UpperThreshold > 256)
-    UpperThreshold = 256;
-end
-if(LowerThreshold < 0)
-    LowerThreshold = 0;
-end
+LowerThreshold = GetLowerThreshold(WindowCentre, WindowSize);
+UpperThreshold = GetUpperThreshold(WindowCentre, WindowSize);
 
 for Column = 1 : ImageWidth
     for Row = 1 : ImageHeight
@@ -123,5 +105,19 @@ for Column = 1 : ImageWidth
             end
         end
     end
+end
+end
+
+function LowerThreshold = GetLowerThreshold(WindowCentre, WindowSize)
+LowerThreshold = WindowCentre - (double(WindowSize) / 2.0);
+if(LowerThreshold < 0)
+    LowerThreshold = 0;
+end
+end
+
+function UpperThreshold = GetUpperThreshold(WindowCentre, WindowSize)
+UpperThreshold = WindowCentre + (double(WindowSize) / 2.0);
+if(UpperThreshold > 256)
+    UpperThreshold = 256;
 end
 end
