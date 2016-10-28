@@ -4,6 +4,40 @@ img { display: block; margin: auto; }
 </style>
 # Image Segmentation Coursework
 ### By Daniel Eldar
+<br><br>
+## File Guide
+This section shows you which files do what and which files should be run for each task.
+
+#### Image Files
+The following image files have been included in this coursework:
+
+- `girlface.bmp` : The original girlface image specified in the coursework.
+- `girlfaceGT.bmp` : The ground truth prepared for the ROC curve analysis.
+- `cameraman.tif` : The cameraman image used to compare the performance of some of the algorithms on several images.
+
+| Girlface | Girlface Ground Truth | Cameraman |
+|:-:|:-:|:-:|
+|![Girlface](Images/Girlface.png)|![Girlface](Images/GirlfaceGT.png)|![Cameraman](Images/Cameraman.png)|
+
+#### Coursework Files
+The coursework files, are the files which should be run in order to see the code running for each task. Those files are:
+##### Core Section Files
+- `CourseworkHistogram.m` : This file should be run to see task 1 run and produce histograms for the images.
+- `CourseworkThreshold.m` : This file should be run for task 2 and will produce a set of images with different thresholds based on the parameters in the file.
+- `CourseworkROCThreshold.m` : This file is to be run for task 3 and will produce the ROC curve along with the desired operating point.
+
+##### Advanced Section Files
+- `CourseworkRegionGrowing.m` : This file is for task 1 and will produce the region growing algorithm for a the girlface image with the number of subdivisions as the parameter for how many seeds it should test. It also creates a figure per threshold to test. (As given, the default is 2 thresholds: 53 and 80).
+- `CourseworkROCRegionGrowing.m` : This file is also for task 1 and will produce an ROC curve for different thresholds based on the pixel in middle of the image based on an 8 neighbourhood algorithm.
+- `CourseworkMeanShift.m` : This file is for task 2 and this will show the output for the window sizes set and will produce those outputs for both the `cameraman` image and the `girlface` image and display them in different windows.
+
+#### Algorithm Files
+These files are the files which contain the actual algorithm used by the Coursework files (with the exception of `CourseworkROCThreshold.m` and `CourseworkROCRegionGrowing.m` which contain the algorithm for the ROC Curves within them):
+
+- `GreyHistogram.m` : This file contains the algorithm to produce the histogram by taking an image and returning the histogram data. Note: It will only return the histogram data and the data needs to be plotted by a function like bar(), or by using the `CourseworkHistogram.m` file.
+- `Threshold.m` : This file contains the algorithm to produce a new image from the image and threshold provided to it. It has a flag as to whether it should or should not display the result after calculation.
+- `RegionGrowing.m` : This file contains the region growing algorithm. It takes as parameters the image, seed position, threshold and whether to use the 4 or 8 neighbourhood.
+- `MeanShift.m` : This file contains the mean shift algorithm and will return the image output for what it has calculated, it takes the size of the window to use, the image and the number of repeats over the data.
 
 ## Core Section
 ### Task 1 - Histograms
@@ -35,7 +69,7 @@ The main problem with an algorithm like this is that it has a set threshold for 
 Through the different values for the threshold in the image above it can be seen how it is quite difficult to separate the skin correctly using this method.
 
 ### Task 3 - Thresholding ROC Curve
-The creation of a Receiver Operating Characteristic Curve can be found in the **'ROCThreshold.m'** file, it will read the **'girlface.bmp'** image file and will run the thresholding algorithm on it with the thresholding values between 0 and 255. It will then calculate the true positive fraction (sensitivity) and the false positive fraction (1 - specificity) by comparing the image returned with the ground truth constructed and stores them in an array. Once everything is calculated, the desired operating point is calculated in a separate function which is given all of the data and then the ROC curve is plotted using MATLAB's plot function.
+The creation of a Receiver Operating Characteristic Curve can be found in the **'CourseworkROCThreshold.m'** file, it will read the **'girlface.bmp'** image file and will run the thresholding algorithm on it with the thresholding values between 0 and 255. It will then calculate the true positive fraction (sensitivity) and the false positive fraction (1 - specificity) by comparing the image returned with the ground truth constructed and stores them in an array. Once everything is calculated, the desired operating point is calculated in a separate function which is given all of the data and then the ROC curve is plotted using MATLAB's plot function.
 
 The results of the code look like so:
 ![Girlface Thresholding ROC Curve](Images/ThresholdingROCCurve.png)
@@ -60,7 +94,7 @@ The region algorithm can be easily run through the **'CourseworkRegionGrowing.m'
 
 After those tests, the point `[256, 256]` was chosen to be the seed for the ROC curve calculations as it was a good point across all of the tests above which gave a reasonable region from it.
 
-The following ROC curve was obtained by running the thresholds from 0 to 255 (inclusive) on the region growing algorithm with the seed `[256, 256]` (`ROCRegionGrowing.m` can be run to obtain that result) :
+The following ROC curve was obtained by running the thresholds from 0 to 255 (inclusive) on the region growing algorithm with the seed `[256, 256]` (`CourseworkROCRegionGrowing.m` can be run to obtain that result) :
 
 ![Girlface Region Growing ROC Curve](Images/RegionGrowingROCCurve.png)
 
