@@ -1,4 +1,4 @@
-function GreyImage = Threshold(Image, Threshold, showImage)
+function GreyImage = Threshold(Image, Threshold, ShowImage)
 
 [Width, Height, Dimension] = size(Image);
 
@@ -14,7 +14,7 @@ for Column = 1 : Width
     	GreyImage(Column, Row) = (Image(Column, Row) >= Threshold) * 255;
     end
 end
-if(showImage == true)
+if(ShowImage == true)
     imshow(GreyImage);
 end
 end
