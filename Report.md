@@ -1,10 +1,12 @@
 <style>
 h1, h2, h3, h4, h5 { text-align: center; }
-img { display: block; margin: auto; }
+img { display: block; margin: auto; max-width: 90%; }
 </style>
 # Image Segmentation Coursework
 ### By Daniel Eldar
-<br><br>
+
+<div class="page-break"></div>
+
 ## File Guide
 This section shows you which files do what and which files should be run for each task.
 
@@ -39,6 +41,8 @@ These files are the files which contain the actual algorithm used by the Coursew
 - `RegionGrowing.m` : This file contains the region growing algorithm. It takes as parameters the image, seed position, threshold and whether to use the 4 or 8 neighbourhood.
 - `MeanShift.m` : This file contains the mean shift algorithm and will return the image output for what it has calculated, it takes the size of the window to use, the image and the number of repeats over the data.
 
+<div class="page-break"></div>
+
 ## Core Section
 ### Task 1 - Histograms
 The histogram task can be found in the **'CourseworkHistogram.m'** file and will take the **'girlface.bmp'** image and **'cameraman.tif'** in the folder, and use the function in **'GreyHistogram.m'** count the various intensities and return the histogram data for each image.
@@ -46,9 +50,9 @@ Afterward the histograms are shown as well as the histograms from MATLAB's histo
 
 ![Girlface and Cameraman Histograms](Images/CourseworkHistogram.png)
 
- Camera Man Image | Girlface Image
-:---------------------------------: | :--------------------------------:
-![Cameraman](Images/Cameraman.png) | ![Girlface](Images/Girlface.png)
+|Camera Man Image | Girlface Image|
+|:-:|:-:|
+| ![Cameraman](Images/Cameraman.png) | ![Girlface](Images/Girlface.png) |
 
 As we can see from the histograms, the distribution across the greyscale of both images is quite different throughout the intensities.
 
@@ -82,13 +86,14 @@ The following is a comparison of the threshold from the trial and error approach
 
 As you can see the one with the calculated threshold got almost all of the skin, however, it got all of the background as well and quite a lot from the hair and clothing, while the trial and error, while getting a lot less of the skin, got much less of the background and other unwanted features.
 
+<div class="page-break"></div>
 
 ## Advanced Section
 ### Task 1 - Region Growing
 The region algorithm can be easily run through the **'CourseworkRegionGrowing.m'** file, which will run the algorithm with several seed locations and the neighbourhood that is set. The implementation of the algorithm can be found in the **'RegionGrowing.m'** file in the `RegionGrowing` function which can work with either a 4 neighnbourhood scheme or an 8 neighnbourhood scheme. Originally, for **'CourseworkRegionGrowing.m'**, the threshold values used for testing were the values from the previous thresholding algorithms to see the effect of the different seed locations on the Region of Interest. As can be seen in the images below, there isn't much difference between the difference positions as long as they are not in some very dark regions of the image:
 
 | Neighbourhood Size  \ <br>Threshold | 53  |  80|
-|:-------------------------------:|:---:|:--:|
+|:-:|:-:|:-:|
 |   4 Neighbourhood  | ![T53,4N](Images/Girlface4Neighbourhood53Threshold.png)        |  ![T80,4N](Images/Girlface4Neighbourhood80Threshold.png)    |
 |   8 Neighbourhood  |  ![T53,8N](Images/Girlface8Neighbourhood53Threshold.png)      |  ![T53,8N](Images/Girlface8Neighbourhood80Threshold.png)    |
 
