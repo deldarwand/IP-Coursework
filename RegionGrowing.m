@@ -1,5 +1,5 @@
-function RegionGrowingImage = RegionGrowing(Seed, Threshold, NeighbourhoodSize)
-Image = imread('girlface.bmp');
+function RegionGrowingImage = RegionGrowing(Image, Seed, Threshold, NeighbourhoodSize, ShowImage)
+
 [ImageWidth, ImageHeight] = size(Image);
 
 BoundaryQueue = zeros(2, ImageWidth*ImageHeight, 'int32');
@@ -40,10 +40,11 @@ while(BoundaryQueueHead ~= 0)
         end
     end
 end
-imshow(VisitedPixels >= 1);
-hold on;
-plot(Seed(1),Seed(2),'r.','MarkerSize',20);
-
+if (ShowImage == true)
+    imshow(VisitedPixels >= 1);
+    hold on;
+    plot(Seed(1),Seed(2),'r.','MarkerSize',20);
+end
 RegionGrowingImage = VisitedPixels >= 1;
 end
 
