@@ -1,5 +1,5 @@
 function [offsetsRows, offsetsCols, distances] = templateMatchingIntegralImage(row,...
-    col,patchSize, searchWindowSize)
+    col,patchSize, searchWindowSize, image)
 % This function should for each possible offset in the search window
 % centred at the current row and col, save a value for the offsets and
 % patch distances, e.g. for the offset (-1,-1)
