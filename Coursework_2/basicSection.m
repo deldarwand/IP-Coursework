@@ -15,7 +15,7 @@ searchWindowSize = 5;
 %% Implementation of work required in your basic section-------------------
 
 % TODO - Load Image
-image = imread('images/alleyNoisy_sigma20.png');%zeros(100, 100);
+image = imread('images/alleyNoisy_sigma20.png'); %zeros(100, 100);
 
 % TODO - Fill out this function
 image_ii = computeIntegralImage(image);
@@ -31,7 +31,7 @@ figure('name', 'Normalised Integral Image');
 
 % TODO - Template matching using integral images
 [offsetsRows_ii, offsetsCols_ii, distances_ii] = templateMatchingIntegralImage(row, col,...
-    patchSize, searchWindowSize, image);
+    patchSize, searchWindowSize, image_ii);
 
 %% Let's print out your results--------------------------------------------
 
@@ -39,8 +39,10 @@ figure('name', 'Normalised Integral Image');
 % the same!
 length(distances_naive)
 for i=1:length(distances_naive)
-    disp([...%'offset rows: ', num2str(offsetsRows_naive(i)), '; offset cols: ',...
-        %num2str(offsetsCols_naive(i)), ...
-        '; Naive Distance = ', num2str(distances_naive(i),10)]);%,...
-       % '; Integral Im Distance = ', num2str(distances_ii(i),10)]);
+    disp(['offset rows: ', num2str(offsetsRows_naive(i)), '; offset cols: ',...
+        num2str(offsetsCols_naive(i)), ...
+        '; Naive Distance = ', num2str(distances_naive(i),10),...
+        ...%'offset row integral = ', num2str(offsetsRows_ii(i)),...
+        ...%'offset col integral = ', num2str(offsetsCols_ii(i)),...
+        '; Integral Im Distance = ', num2str(distances_ii(i),10)]);
 end

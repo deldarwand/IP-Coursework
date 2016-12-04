@@ -35,15 +35,19 @@ else %The search size is odd.
     
 end
 
-offsetsRows = zeros(searchWindowSize,1);
-offsetsCols = zeros(searchWindowSize,1);
-distances = zeros(searchWindowSize*searchWindowSize, 1);
+offsetsRows = zeros(searchWindowSize*searchWindowSize,1);
+offsetsCols = zeros(searchWindowSize*searchWindowSize,1);
+distances = zeros(searchWindowSize*searchWindowSize,1);
 
 centrePatchSum = getSumOfPatch(image, row, col, patchSize);
 counter = 1;
 for x = lowerXValue : upperXValue
     for y = lowerYValue : upperYValue
         patchDistance = getSumOfPatch(image, x, y, patchSize) - centrePatchSum;
+        xOffset = x - col;
+        yOffset = y - row;
+        offsetsCols(counter) = xOffset;
+        offsetsRows(counter) = yOffset;
         distances(counter) = patchDistance * patchDistance;
         counter = counter+1;
     end
