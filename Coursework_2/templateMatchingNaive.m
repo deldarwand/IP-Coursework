@@ -35,31 +35,38 @@ else %The search size is odd.
     
 end
 
+[paddedImage, paddingSize] = padImage(image, searchWindowSize, patchSize);
+paddingSize = paddingSize -1;
+lowerYValue = lowerYValue + paddingSize;
+lowerXValue = lowerXValue + paddingSize;
+upperYValue = upperYValue + paddingSize;
+upperXValue = upperXValue + paddingSize;
+image = paddedImage;
 offsetsRows = zeros(searchWindowSize*searchWindowSize,1);
 offsetsCols = zeros(searchWindowSize*searchWindowSize,1);
 distances = zeros(searchWindowSize*searchWindowSize,1);
-
-centrePatchSum = getSumOfPatch(image, row, col, patchSize);
+%centrePatchSum = getSumOfPatch(image, row, col, patchSize);
+[imageWidth, imageHeight, colours] = size(image);
 counter = 1;
 for x = lowerXValue : upperXValue
     for y = lowerYValue : upperYValue
-        patchDistance = getSumOfPatch(image, x, y, patchSize) - centrePatchSum;
-        xOffset = x - col;
-        yOffset = y - row;
+        xOffset = x - col - paddingSize;
+        yOffset = y - row - paddingSize;
+        patchDistance = getSumOfPatch(image, x, y, patchSize, col + paddingSize, row + paddingSize);
         offsetsCols(counter) = xOffset;
         offsetsRows(counter) = yOffset;
-        distances(counter) = patchDistance * patchDistance;
+        distances(counter) = patchDistance;
         counter = counter+1;
     end
 end
 end
 
-function sumOfPatch = getSumOfPatch(image, xPosition, yPosition, patchSize)
+function sumOfPatch = getSumOfPatch(image, xPosition, yPosition, patchSize, originalX, originalY)
 
 isPatchSizeEven = mod(patchSize, 2);
-
+[imageWidth, imageHeight, colours] = size(image);
 lowerYValue = -1; lowerXValue = -1; upperYValue = -1; upperXValue = -1;
-
+lowerOffset = 0; upperOffset = 0;
 if(isPatchSizeEven == 0) %The patch size is even.
     lowerOffset = (patchSize - 2) / 2;
     upperOffset = patchSize / 2;
@@ -71,7 +78,8 @@ if(isPatchSizeEven == 0) %The patch size is even.
     
 else %The search size is odd.
     offset = (patchSize - 1) / 2;
-    
+    lowerOffset = offset;
+    upperOffset = offset;
     lowerYValue = yPosition - offset;
     lowerXValue = xPosition - offset;
     upperYValue = yPosition + offset;
@@ -79,13 +87,79 @@ else %The search size is odd.
     
 end
 
-sumOfPatch = double(0);
+newPatch = double(image(lowerXValue:upperXValue, lowerYValue:upperYValue));
+oldPatch = double(image(originalX-lowerOffset:originalX+upperOffset, originalY-lowerOffset:originalY+upperOffset));
 
-for x = lowerXValue : upperXValue
-    for y = lowerYValue : upperYValue
-        sumOfPatch = double(sumOfPatch) + double(image(x, y));
+patchDifference = (newPatch - oldPatch).^2.0;
+sumOfPatch = sum(patchDifference(:));
+% for x = lowerXValue : upperXValue
+%     for y = lowerYValue : upperYValue % x and y are pixels in the new patch.
+%         newPatchSample = double(image(x,y));
+%         
+%         xOffset = x - originalX;
+%         yOffset = y - originalY;
+%         oldPatchSample = double(image(originalX + xOffset, originalY + yOffset));
+%         
+%         
+%         sumOfPatch = sumOfPatch + (newPatchSample - oldPatchSample)^2.0;
+%         
+%     end
+% end
+
+
+end
+
+function [paddedImage, paddingSize] = padImage(image, windowSize, patchSize)
+
+paddingSize = (windowSize+patchSize)*2;
+[imageWidth, imageHeight, colours] = size(image);
+paddedImage = zeros(imageWidth+paddingSize, imageHeight+paddingSize, colours, 'uint8');
+
+for x = 1 : imageWidth+paddingSize
+    for y = 1 : imageHeight+paddingSize
+        positionXInOriginal = abs(x - (paddingSize/2))+1;
+        positionYInOriginal = abs(y - (paddingSize/2))+1;
+        
+        if(positionXInOriginal > imageWidth)
+            positionXInOriginal = imageWidth - (positionXInOriginal - imageWidth)
+        end
+        if(positionYInOriginal > imageHeight)
+            positionYInOriginal = imageHeight - (positionYInOriginal - imageHeight)
+        end
+        currentImageSample = image(positionXInOriginal, positionYInOriginal, :);
+        paddedImage(x,y, :) = currentImageSample;
     end
 end
-
-
+paddingSize = paddingSize/2;
 end
+
+% If the patch centre is outside the image, ignore it.
+% function shouldCheckPatch = isPatchValid(xPosition, yPosition, imageWidth, imageHeight, patchSize)
+%     shouldCheckPatch = true;
+%     lowerYValue = -1; lowerXValue = -1; upperYValue = -1; upperXValue = -1;
+%     isPatchSizeEven = mod(patchSize, 2);
+% if(isPatchSizeEven == 0) %The patch size is even.
+%     lowerOffset = (patchSize - 2) / 2;
+%     upperOffset = patchSize / 2;
+%     
+%     lowerYValue = yPosition - lowerOffset;
+%     lowerXValue = xPosition - lowerOffset;
+%     upperYValue = yPosition + upperOffset;
+%     upperXValue = xPosition + upperOffset;
+%     
+% else %The search size is odd.
+%     offset = (patchSize - 1) / 2;
+%     
+%     lowerYValue = yPosition - offset;
+%     lowerXValue = xPosition - offset;
+%     upperYValue = yPosition + offset;
+%     upperXValue = xPosition + offset;
+%     
+% end
+% 
+%     if(lowerYValue < 1 || lowerXValue < 1)
+%         shouldCheckPatch = false;
+%     elseif(upperXValue > imageWidth || upperXValue > imageHeight)
+%         shouldCheckPatch = false;
+%     end
+% end

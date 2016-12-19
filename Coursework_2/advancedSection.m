@@ -1,9 +1,8 @@
 %% Some parameters to set - make sure that your code works at image borders!
 patchSize = 2;
-sigma = 20; % standard deviation (different for each image!)
-h = 0.55; %decay parameter
+sigma = 20 / 256; % standard deviation (different for each image!)
+h = 0.1; %decay parameter
 windowSize = 8;
-
 %TODO - Read an image (note that we provide you with smaller ones for
 %debug in the subfolder 'debug' int the 'image' folder);
 %Also unless you are feeling adventurous, stick with non-colour
@@ -14,9 +13,15 @@ windowSize = 8;
 %indicated in the image file names)
 
 %REPLACE THIS
-imageNoisy = zeros(200, 200);
-imageReference = zeros(200, 200);
-
+cd(fileparts(mfilename('fullpath')))
+imageNoisy = im2double(imread(['images/','alleyNoisy_sigma20.png']));
+imageNoisy = rgb2gray(imageNoisy);
+figure;
+imshow(imageNoisy);
+% imageNoisy = zeros(200, 200);
+imageReference = im2double(imread(['images/','alleyReference.png']));
+imageReference = rgb2gray(imageReference);
+figure;
 tic;
 %TODO - Implement the non-local means function
 filtered = nonLocalMeans(imageNoisy, sigma, h, patchSize, windowSize);
@@ -29,9 +34,9 @@ figure('name', 'NL-Means Denoised Image');
 imshow(filtered);
 
 %Show difference image
-diff_image = abs(image - filtered);
+diff_image = abs(double(imageNoisy) - double(filtered));
 figure('name', 'Difference Image');
-imshow(diff_image / max(max((diff_image))));
+imshow(double(diff_image) / max(max((diff_image))));
 
 %Print some statistics ((Peak) Signal-To-Noise Ratio)
 disp('For Noisy Input');

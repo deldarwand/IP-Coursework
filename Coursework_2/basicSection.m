@@ -9,20 +9,20 @@ col = 100;
 patchSize = 5;
 
 % Search window size - make sure your code works for different values
-searchWindowSize = 5;
-
+searchWindowSize = 3;
 
 %% Implementation of work required in your basic section-------------------
-
 % TODO - Load Image
-image = imread('images/alleyNoisy_sigma20.png'); %zeros(100, 100);
+cd(fileparts(mfilename('fullpath')))
+image = imread(['images/debug/','townReference.png']); %zeros(100, 100);
+image = rgb2gray(image);
 
 % TODO - Fill out this function
 image_ii = computeIntegralImage(image);
 
 % TODO - Display the normalised Integral Image
 % NOTE: This is for display only, not for template matching yet!
-figure('name', 'Normalised Integral Image');
+%figure('name', 'Normalised Integral Image');
 
 
 % TODO - Template matching for naive SSD (i.e. just loop and sum)
@@ -30,8 +30,8 @@ figure('name', 'Normalised Integral Image');
     patchSize, searchWindowSize, image);
 
 % TODO - Template matching using integral images
-[offsetsRows_ii, offsetsCols_ii, distances_ii] = templateMatchingIntegralImage(row, col,...
-    patchSize, searchWindowSize, image_ii);
+ [offsetsRows_ii, offsetsCols_ii, distances_ii] = templateMatchingIntegralImage(row, col,...
+     patchSize, searchWindowSize, image);
 
 %% Let's print out your results--------------------------------------------
 
@@ -42,7 +42,5 @@ for i=1:length(distances_naive)
     disp(['offset rows: ', num2str(offsetsRows_naive(i)), '; offset cols: ',...
         num2str(offsetsCols_naive(i)), ...
         '; Naive Distance = ', num2str(distances_naive(i),10),...
-        ...%'offset row integral = ', num2str(offsetsRows_ii(i)),...
-        ...%'offset col integral = ', num2str(offsetsCols_ii(i)),...
         '; Integral Im Distance = ', num2str(distances_ii(i),10)]);
 end
